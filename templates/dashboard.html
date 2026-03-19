@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jumia Scraper Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>body { background: #0f172a; color: white; }</style>
+</head>
+<body class="p-8">
+  <h1 class="text-4xl font-bold mb-8">Jumia E-commerce Scraper Dashboard</h1>
+  <div class="grid grid-cols-3 gap-6">
+    <div class="bg-zinc-800 p-6 rounded-xl">Total Products: <span class="text-3xl">{{ stats.total_products }}</span></div>
+    <div class="bg-zinc-800 p-6 rounded-xl">Avg Price: ₦{{ stats.avg_price }}</div>
+    <div class="bg-zinc-800 p-6 rounded-xl">Categories: {{ stats.categories }}</div>
+  </div>
+
+  <canvas id="priceChart" class="mt-10 bg-zinc-900 p-4 rounded-xl"></canvas>
+
+  <a href="/scrape?pages=10" class="mt-8 inline-block bg-green-600 hover:bg-green-500 px-8 py-4 rounded-xl text-xl">Scrape More Pages (10k+ records)</a>
+  <a href="/data/products.csv" class="ml-4 inline-block bg-blue-600 hover:bg-blue-500 px-8 py-4 rounded-xl text-xl">Download CSV</a>
+
+  <script>
+    new Chart(document.getElementById('priceChart'), {
+      type: 'bar',
+      data: { labels: {{ data | map(attribute='title') | list | tojson }}, datasets: [{ label: 'Price (₦)', data: {{ data | map(attribute='price') | list | tojson }}, backgroundColor: '#22c55e' }] }
+    });
+  </script>
+</body>
+</html>
